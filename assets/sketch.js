@@ -5,7 +5,7 @@ function preload(){
   sunImg= loadImage("https://andersonlot.github.io/planetario/assets/sun_image.png");
 }
 function setup() {
-  canva=createCanvas(900, 900);
+  canva=createCanvas(600, 600);
   canva.parent('canvas');
   planets.push(new Planet(width * 0.75, height * 0.5));
   sun=new Planet(width/2,height/2);
@@ -13,15 +13,19 @@ function setup() {
   sun.size = 5000;
   sun.deltaX=0;
 }
-
+var angle_sun=0;
 function draw() {
-  clear();
-  //background(10);
-  //sun.draw();
-  fill(255,255,20);
-  image(sunImg,width/2,height/2);
-  circle(sun.x,sun.y,50);
-
+  strokeWeight(2);
+  stroke(0,50);
+  angle_sun+=0.0005;
+  //clear();
+  background(15,16+1,16+7,100);
+  push();
+  translate(width / 2, height / 2);
+  rotate(angle_sun);
+  sunImg.resize(200,200);
+  image(sunImg,-100,-100);
+  pop();
   for (const planet of planets) {
     planet.draw();
     planet.check(sun);
@@ -31,6 +35,12 @@ function draw() {
     
     }
   }
+  push();
+  stroke(255,100);
+  strokeWeight(5);
+  noFill();
+  rect(0,0,width,height);
+  pop();
 }
 
 function mousePressed() {
