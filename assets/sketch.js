@@ -14,14 +14,12 @@ function setup() {
   sun.deltaX=0;
 }
 
-
-
 function draw() {
   clear();
   //background(10);
   //sun.draw();
   fill(255,255,20);
-  image()
+  image(sunImg,width/2,height/2);
   circle(sun.x,sun.y,50);
 
   for (const planet of planets) {
