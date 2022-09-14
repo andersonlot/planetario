@@ -12,6 +12,7 @@ function setup() {
   sun.c="#FFEE00";
   sun.size = 5000;
   sun.deltaX=0;
+
 }
 var angle_sun=0;
 function draw() {
@@ -19,7 +20,7 @@ function draw() {
   stroke(0,50);
   angle_sun+=0.0005;
   //clear();
-  background(15,16+1,16+7,100);
+  background(15,16+1,16+7);
   push();
   translate(width / 2, height / 2);
   rotate(angle_sun);
