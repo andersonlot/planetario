@@ -1,116 +1,58 @@
-class Bolinha {
-  constructor(px, py, raio, colorR, colorG, colorB) {
-    this.p = createVector(px, py);
-    this.v = createVector(0, 0);
-    this.a = createVector(0, 0);
-    this.raio = raio;
-    this.colorR = colorR;
-    this.colorG = colorG;
-    this.colorB = colorB;
-    this.mass = 0.005*30;
-  }
-  desenhar() {
-    fill(this.colorR, this.colorG, this.colorB);
-    noStroke();
-    circle(this.p.x, this.p.y, this.raio);
-  }
-  atualizar() {
-    this.p.add(this.v);
-    this.v.add(this.a);
-  }
-  colidir_bordas(largura, altura, fator_restaura) {
-    if (this.p.x >= largura) {
-      this.v.x = -fator_restaura * this.v.x;
-      this.p.x = largura;
-    }
-    if (this.p.x <= 0) {
-      this.v.x = -fator_restaura * this.v.x;
-      this.p.x = 0;
-    }
-    if (this.p.y >= altura) {
-      this.v.y = -fator_restaura * this.v.y;
-      this.p.y = altura;
-    }
-    if (this.p.y <= 0) {
-      this.v.y = -fator_restaura * this.v.y;
-      this.p.y = 0;
-    }
-  }
-}
+const planets = [];
 
 function setup() {
-  frameRate(30);
-  larg = 600;
-  altu = 600;
-  G = 9.8;
-  canva=createCanvas(larg, altu);
+  canva=createCanvas(600, 600);
   canva.parent('canvas');
-  B = [];
-  numero = 20;
-  for (i = 0; i < numero; i++) {
-    B[i] = new Bolinha(
-      random(100, larg - 100),
-      random(100, altu - 100),
-      30 * random(0.1, 1) * random(0.1, 1),
-      random(0, 255),
-      random(0, 255),
-      random(0, 255)
-    );
+  planets.push(new Planet(width * 0.75, height * 0.5));
+}
+
+function mousePressed() {
+  planets.push(new Planet(mouseX, mouseY));
+}
+
+function draw() {
+  background(32);
+  fill(255, 255, 0);
+  circle(width / 2, height / 2, 50);
+
+  for (const planet of planets) {
+    planet.draw();
+    for(const planetB of planets){
+    planet.check(planetB);
+    }
   }
 }
 
-trans=200;
-
-function draw() {
-  B[0].p.x=mouseX;
-  B[0].p.y=mouseY;
-  B[0].mass=30;
-   B[0].raio=100;
-  
-  
-  
-  background(0,trans);
-
-  
-  massatotal = 0;
-  massa=createVector(0,0);
-  
-  for (i = 0; i < numero; i++) {
-    massatotal = massatotal + B[i].mass;
-    let p_0 =B[i].p.copy(); 
-    let p_1=p_0.mult(B[i].mass);
-    massa.add(p_1);
+class Planet {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.size = random(1, 20);
+    this.deltaX =0
+    this.deltaY = 0
+    this.c = color(random(100, 255), random(100, 255), random(100, 255));
   }
-  cm = massa.mult(1/massatotal);
 
-  for (i = 0; i < numero; i++) {
-    B[i].desenhar();
-    B[i].atualizar();
-    B[i].colidir_bordas(larg, altu, 0.5);
-    Fx = 0;
-    Fy = 0;
-    for (j = 0; j < numero; j++) {
-      if (i == j) {
-      } else {
-        Fx =
-          Fx +
-          (B[i].mass * B[j].mass * G * (B[j].p.x - B[i].p.x)) /
-            sqrt(
-              (B[j].p.x - B[i].p.x) * (B[j].p.x - B[i].p.x) +
-                (B[j].p.y - B[i].p.y) * (B[j].p.y - B[i].p.y)
-            );
-        Fy =
-          Fy +
-          (B[i].mass * B[j].mass * G * (B[j].p.y - B[i].p.y)) /
-            sqrt(
-              (B[j].p.y - B[i].p.y) * (B[j].p.y - B[i].p.y) +
-                (B[j].p.x - B[i].p.x) * (B[j].p.x - B[i].p.x)
-            );
-      }
+  draw() {
+    const sunX = width / 2;
+    const sunY = height / 2;
+    const distanceSun = dist(this.x, this.y, sunX, sunY);
+    if(distanceSun>10){
+    this.deltaX += 50*(sunX - this.x) / (distanceSun*distanceSun*distanceSun);
+    this.deltaY += 50*(sunY - this.y) / (distanceSun*distanceSun*distanceSun);
     }
-    B[i].a.x = (0.001 * Fx) / B[i].mass;
-    B[i].a.y = (0.001 * Fy) / B[i].mass;
+
+    this.x += 0.5*this.deltaX;
+    this.y += 0.5*this.deltaY;
+
+    fill(this.c);
+    ellipse(this.x, this.y, this.size);
   }
-  fill("red");
-  //square(cm.x-10,cm.y-10, 20);
+  check(planetB){
+    if(dist(this.x,this.y,planetB.x,planetB.y)<5){
+      return;
+    }
+   this.deltaX += 1*planetB.size* (planetB.x - this.x) / (dist(this.x,this.y,planetB.x,planetB.y)*dist(this.x,this.y,planetB.x,planetB.y)*dist(this.x,this.y,planetB.x,planetB.y));
+   this.deltaY += 1*planetB.size*(planetB.y - this.y) / (dist(this.x,this.y,planetB.x,planetB.y)*dist(this.x,this.y,planetB.x,planetB.y)*dist(this.x,this.y,planetB.x,planetB.y));
+  }
 }
