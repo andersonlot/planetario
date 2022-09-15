@@ -1,7 +1,8 @@
 const planets = [];
 const max=60;
 var sunImg;
-
+var massa;
+var msg;
 var newPlanetSize = 20;
 
 function preload(){
@@ -15,10 +16,13 @@ function setup() {
   sun.c="#FFEE00";
   sun.mass = 5000;
   sun.deltaX=0;
+  massa="Massa";
+  msg="Use o Scroll do Mouse para alterar o tamanho do planeta antes de clicar.";
 
 }
 var angle_sun=0;
 function draw() {
+  var lang=document.head.lang;
   strokeWeight(2);
   stroke(0,50);
   angle_sun+=0.0005;
@@ -53,6 +57,23 @@ function draw() {
   strokeWeight(3);
   circle(mouseX, mouseY,newPlanetSize/2);
   pop();
+  massaMsg=massa;
+  if(newPlanetSize<0){
+    massaMsg="anti-"+massa;
+  }
+  if(lang==="en"){
+    massa="Mass";
+    msg="Use mouse Scroll to change planets size before clicking."
+    if(newPlanetSize<0){
+      massaMsg="ant-"+massa;
+    }
+  }
+  fill("white");
+  textAlign(CENTER,CENTER);
+  textSize(15);
+  text(massaMsg,mouseX,mouseY-10);
+  text(msg,width/2,height-40);
+
 }
 
 function mousePressed() {
