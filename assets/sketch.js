@@ -4,12 +4,16 @@ var sunImg;
 var massa;
 var msg;
 var newPlanetSize = 20;
+var canva_width=600;
 
 function preload() {
   sunImg = loadImage("https://andersonlot.github.io/planetario/assets/sun_image.png");
 }
 function setup() {
-  canva = createCanvas(600, 600);
+  if(windowWidth<600){
+    canva_width=windowWidth-80;
+  }
+  canva = createCanvas(canva_width, 600);
   canva.parent('canvas');
   planets.push(new Planet(width * 0.75, height * 0.5, 20));
   sun = new Planet(width / 2, height / 2, 1);
@@ -72,7 +76,7 @@ function draw() {
   textAlign(CENTER, CENTER);
   textSize(15);
   text(massaMsg, mouseX, mouseY - 10);
-  text(msg, width / 2, height - 40);
+  //text(msg, width / 2, height - 40);
 
 }
 
