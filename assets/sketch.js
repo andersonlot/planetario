@@ -10,6 +10,8 @@ function preload() {
   sunImg = loadImage("https://andersonlot.github.io/planetario/assets/sun_image.png");
 }
 function setup() {
+  DivCanvas=document.getElementById("canvas");
+  DivCanvas.textContent="";
   if(windowWidth<600){
     canva_width=windowWidth-80;
   }
